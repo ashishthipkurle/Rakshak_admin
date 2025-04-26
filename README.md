@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Rakshak_admin
 =======
 # Rakshak - Blood Donation Management System
@@ -100,8 +100,35 @@ Rakshak is a comprehensive blood donation management system that connects blood 
 7. Add blood bank details to the blood bank section
 
 
+## Screenshots
+
+### Admin Dashboard
+<img src="assets/screenshots/admin_dashboard.png" width="100" alt="Admin Dashboard">
+
+### Add Events
+<img src="assets/screenshots/add_events.jpg" width="100" alt="Add Events">
+
+### Add Blood Banks
+<img src="assets/screenshots/add_blood_bank.jpg" width="100" alt="Add Blood Banks">
+
+### Add Donations
+<img src="assets/screenshots/add_donation.jpg" width="100" alt="Add Donations">
+
+### Donation offers
+<img src="assets/screenshots/panding_donations.jpg" width="100" alt="Donation offers">
+
+### Accepted Donation
+<img src="assets/screenshots/accepted_donations.jpg" width="100" alt="Accepted Donation">
+
+### Blood Inventory and Admin blood Fullfill List
+<img src="assets/screenshots/blood_inventory.jpg" width="100" alt="Blood Inventory"> 
+<img src="assets/screenshots/blood_admin_fullfillment.jpg" width="100" alt="Admin Fullfill Donation">
+
+### Donation History
+<img src="assets/screenshots/admin_donation_history.jpg" width="100" alt="Donation History">
+
 ## Contributors
 
 - [Ashish Thipkurle](https://github.com/ashishthipkurle)
 
->>>>>>> 1ddb1a9 (Admin_App)
+
