@@ -100,6 +100,10 @@ Rakshak is a comprehensive blood donation management system that connects blood 
 6. Add donation to the users donation history
 7. Add blood bank details to the blood bank section
 
+## User App 
+
+git clone https://github.com/ashishthipkurle/Rakshak.git
+
 
 ## Screenshots
 
