@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String _baseUrl = 'https://xnvqeqirpztsprdiydfs.supabase.co';
-  final String _apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhudnFlcWlycHp0c3ByZGl5ZGZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA0NTQ0MzMsImV4cCI6MjA1NjAzMDQzM30.BNhdtVndoiRPnp6yyUJemjqKe-3GlR6o-h24EBHD4zg';
+  final String _baseUrl = '';
+  final String _apiKey = '';
 
   String get baseUrl => _baseUrl;
   String get apiKey => _apiKey;
