@@ -44,7 +44,7 @@ Rakshak is a comprehensive blood donation management system that connects blood 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ashishthipkurle/Rakshak.git
+   git clone https://github.com/ashishthipkurle/Rakshak_admin.git
    cd Rakshak
    ```
 
