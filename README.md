@@ -65,6 +65,7 @@ Rakshak is a comprehensive blood donation management system that connects blood 
 1. Create a new project on [Supabase](https://supabase.com/)
 
 2. Set up the following tables in your Supabase PostgreSQL database:
+
    For the database tables contect on this email:- ashishthipkurle1@gmail.com
 
 3. Set up Row Level Security (RLS) policies for each table as needed
