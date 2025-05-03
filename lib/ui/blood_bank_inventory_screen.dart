@@ -11,7 +11,7 @@ class BloodBankInventoryScreen extends StatefulWidget {
   State<BloodBankInventoryScreen> createState() => _BloodBankInventoryScreenState();
 }
 
-class _BloodBankInventoryScreenState extends State<BloodBankInventoryScreen> {
+class _BloodBankInventoryScreenState extends State<BloodBankInventoryScreen> with WidgetsBindingObserver {
   final AdminApiService _adminApiService = AdminApiService();
   bool _isLoading = false;
   List<Map<String, dynamic>> _bloodInventory = [];
@@ -24,33 +24,67 @@ class _BloodBankInventoryScreenState extends State<BloodBankInventoryScreen> {
   void initState() {
     super.initState();
     _fetchData();
+
+    // Add lifecycle observer
+    WidgetsBinding.instance.addObserver(this );
   }
 
+  @override
+  void dispose() {
+    // Remove lifecycle observer
+    WidgetsBinding.instance.removeObserver(this );
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      print("App resumed - refreshing blood bank inventory data");
+      _fetchData();
+    }
+  }
+
+
   Future<void> _fetchData() async {
+    if (!mounted) return;
+
     setState(() {
       _isLoading = true;
+      _bloodInventory = [];
+      _pendingRequests = [];
     });
 
     try {
       final inventory = await _adminApiService.getBloodInventory();
       final requests = await _adminApiService.getPendingBloodRequests();
 
-      setState(() {
-        _bloodInventory = List<Map<String, dynamic>>.from(inventory);
-        _pendingRequests = List<Map<String, dynamic>>.from(requests);
-        _isLoading = false;
-      });
+      // Completely filter out requests with accepted donors
+      final filteredRequests = requests.where((request) =>
+      request['has_accepted_donor'] != true &&
+          request['status'] == 'pending'
+      ).toList();
+
+      if (mounted) {
+        setState(() {
+          _bloodInventory = List<Map<String, dynamic>>.from(inventory);
+          _pendingRequests = List<Map<String, dynamic>>.from(filteredRequests);
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       print('Error fetching data: $e');
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading data: $e')),
-      );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error loading data: $e')),
+        );
+      }
     }
   }
+  
 
   void _showUpdateInventoryDialog() {
     final _formKey = GlobalKey<FormState>();
@@ -473,6 +507,11 @@ class _BloodBankInventoryScreenState extends State<BloodBankInventoryScreen> {
                 request['blood_type'] ?? 'Unknown';
             final int quantity = request['quantity'] ?? 1;
 
+            // Check if request already has an accepted donor
+            final bool hasAcceptedDonor = request['has_accepted_donor'] == true;
+            final String status = request['status'] ?? 'pending';
+            final bool canFulfill = status == 'pending' && !hasAcceptedDonor;
+
             return Card(
               elevation: 3,
               margin: EdgeInsets.only(bottom: 16.0),
@@ -484,6 +523,7 @@ class _BloodBankInventoryScreenState extends State<BloodBankInventoryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Request details remain the same
                     Row(
                       children: [
                         CircleAvatar(
@@ -538,7 +578,8 @@ class _BloodBankInventoryScreenState extends State<BloodBankInventoryScreen> {
                     SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton(
+                      child: canFulfill
+                          ? ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red[600],
                           foregroundColor: Colors.white,
@@ -555,6 +596,24 @@ class _BloodBankInventoryScreenState extends State<BloodBankInventoryScreen> {
                         child: Text(
                           'FULFILL FROM INVENTORY',
                           style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      )
+                          : Container(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          hasAcceptedDonor
+                              ? 'DONOR ALREADY ACCEPTED'
+                              : 'REQUEST ALREADY FULFILLED',
+                          style: TextStyle(
+                            color: Colors.grey[700],
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
